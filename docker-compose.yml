@@ -23,7 +23,7 @@ services:
     volumes:
       - ./ai_engine:/app
     environment:
-      - GOOGLE_API_KEY=AIzaSyAo2fMARqk545plY7M_tdIwai7TwUiB7o0
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
 
   nginx-proxy:
     image: nginx:latest
