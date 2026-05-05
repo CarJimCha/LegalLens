@@ -28,7 +28,7 @@ def dashboard(request):
     contratos = ContratoAuditado.objects.all().order_by('-fecha_subida')
     form = ContratoForm()
 
-    return render(request, 'dashboard.html', {
+    return render(request, 'core/dashboard.html', {
         'contratos': contratos,
         'form': form
     })
