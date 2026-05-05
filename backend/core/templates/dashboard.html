@@ -50,7 +50,7 @@
                 <td>{{ c.cliente }}</td>
                 <td>{{ c.get_tipo_display }}</td>
                 <td>
-                    <span class="badge {% if c.riesgo == 'Medio' %}bg-warning{% elif c.riesgo == 'Critico' %}bg-danger{% else %}bg-success{% endif %}">
+                    <span class="badge {% if c.riesgo == 'Medio' %}bg-warning{% elif c.riesgo == 'Alto' %}bg-warning{% elif c.riesgo == 'Critico' %}bg-danger{% else %}bg-success{% endif %}">
                         {{ c.riesgo }}
                     </span>
                 </td>
