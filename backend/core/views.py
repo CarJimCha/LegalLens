@@ -1,11 +1,23 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import ContratoAuditado
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login') # Al terminar, enviamos al login
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+
+@login_required
 def dashboard(request):
     contratos = ContratoAuditado.objects.all().order_by('-fecha_subida')
     return render(request, 'dashboard.html', {'contratos': contratos})
-
 
 @login_required
 def detalle_auditoria(request, pk):
