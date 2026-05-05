@@ -20,18 +20,22 @@ def dashboard(request):
     if request.method == 'POST':
         form = ContratoForm(request.POST, request.FILES)
         if form.is_valid():
-            nuevo_contrato = form.save()
+            nuevo_contrato = form.save(commit=False)  # No guardamos aún en DB
+            nuevo_contrato.usuario = request.user  # Asignamos el dueño
+            nuevo_contrato.save()
             nuevo_contrato.auditar_contrato()
             return redirect('dashboard')
 
-    # Obtenemos los contratos para listarlos
-    contratos = ContratoAuditado.objects.all().order_by('-fecha_subida')
-    form = ContratoForm()
+    # Lógica de visibilidad
+    if request.user.is_staff:
+        # Los admins ven todo
+        contratos = ContratoAuditado.objects.all().order_by('-fecha_subida')
+    else:
+        # Los usuarios normales ven solo lo suyo
+        contratos = ContratoAuditado.objects.filter(usuario=request.user).order_by('-fecha_subida')
 
-    return render(request, 'core/dashboard.html', {
-        'contratos': contratos,
-        'form': form
-    })
+    form = ContratoForm()
+    return render(request, 'core/dashboard.html', {'contratos': contratos, 'form': form})
 
 @login_required
 def detalle_auditoria(request, pk):

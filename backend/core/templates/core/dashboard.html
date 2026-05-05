@@ -37,29 +37,32 @@
     <table class="table table-hover mt-4">
         <thead class="table-dark">
             <tr>
+                {% if user.is_staff %}<th>Abogado</th>{% endif %} <!-- Nueva columna -->
                 <th>Cliente</th>
                 <th>Tipo</th>
                 <th>Riesgo</th>
-                <th>DNI Detectados</th>
+                <th>Importes / Fechas</th> <!-- Agrupamos datos extraídos -->
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for c in contratos %}
             <tr>
+                {% if user.is_staff %}<td>{{ c.usuario.username }}</td>{% endif %}
                 <td>{{ c.cliente }}</td>
                 <td>{{ c.get_tipo_display }}</td>
                 <td>
-                    <span class="badge {% if c.riesgo == 'Medio' %}bg-warning{% elif c.riesgo == 'Alto' %}bg-warning{% elif c.riesgo == 'Critico' %}bg-danger{% else %}bg-success{% endif %}">
+                    <span class="badge {% if c.riesgo == 'Critico' %}bg-danger{% elif c.riesgo == 'Medio' %}bg-warning{% elif c.riesgo == 'Bajo' %}bg-success{% else %}.bg-info{% endif %}">
                         {{ c.riesgo }}
                     </span>
                 </td>
-                <td>{{ c.resultado_json.datos_clave.dni|join:", " }}</td>
                 <td>
-                    <a href="{% url 'detalle_auditoria' c.id %}" class="btn btn-sm btn-outline-primary">
-                        Ver Detalle
-                    </a>
+                    <small>
+                        {{ c.resultado_json.datos_clave.fechas|join:", " }}<br>
+                        <strong>{{ c.resultado_json.datos_clave.importes|join:", " }}</strong>
+                    </small>
                 </td>
+                <td><a href="{% url 'detalle_auditoria' c.id %}" class="btn btn-sm btn-outline-primary">Ver</a></td>
             </tr>
             {% endfor %}
         </tbody>

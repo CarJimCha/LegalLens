@@ -32,16 +32,35 @@ class ContratoBase:
 
     def _llamar_a_gemini(self):
         try:
-            # Usamos gemini-1.5-flash (muy rápido y gratuito)
             model = genai.GenerativeModel('gemini-2.5-flash-lite',
                                           generation_config={"response_mime_type": "application/json"})
 
+            # Lógica de especialización por tipo de contrato
+            if isinstance(self, ContratoAlquiler):
+                contexto_legal = """Eres experto en la Ley de Arrendamientos Urbanos (LAU) de España. 
+                Busca: fianzas que superen el mes legal, cláusulas que impidan la prórroga legal de 5 años, 
+                o intentos de cobrar honorarios de inmobiliaria al inquilino (siendo el casero empresa)."""
+            elif isinstance(self, ContratoNDA):
+                contexto_legal = """Eres experto en derecho mercantil y acuerdos de confidencialidad (NDA). 
+                Busca: duraciones de confidencialidad perpetuas e injustificadas, definiciones de 'Información Confidencial' 
+                demasiado vagas, o penalizaciones económicas desproporcionadas."""
+            else:
+                contexto_legal = "Eres un auditor legal experto en contratos españoles."
+
             prompt = f"""
-            Eres un experto abogado auditor de contratos en España.
-            Analiza el siguiente texto y devuelve un objeto JSON con:
-            - "puntos_clave": lista de los 3 puntos más importantes.
-            - "banderas_rojas": lista de cláusulas peligrosas o abusivas.
-            - "riesgo_total": una sola palabra (Bajo, Medio o Critico).
+            {contexto_legal}
+            Analiza el texto y extrae la información requerida en este formato JSON exacto:
+            {{
+                "datos_clave": {{
+                    "nombres_partes": ["Nombre completo o empresa de cada firmante"],
+                    "dni": ["DNI o CIF de cada parte"],
+                    "fechas": ["Fecha de firma, inicio y fin si existen"],
+                    "importes": ["Renta, fianza, penalizaciones o cuantías mencionadas"]
+                }},
+                "puntos_clave": ["Lista de 3 puntos fundamentales del acuerdo"],
+                "banderas_rojas": ["Lista de cláusulas ilegales, abusivas o de alto riesgo"],
+                "riesgo_total": "Bajo, Medio o Critico"
+            }}
 
             Texto del contrato:
             {self.texto[:8000]}

@@ -1,5 +1,6 @@
 import requests  # Asegúrate de que 'requests' esté en el requirements.txt del backend
 from django.db import models
+from django.conf import settings
 
 class ContratoAuditado(models.Model):
     tipo_contrato = [
@@ -11,6 +12,13 @@ class ContratoAuditado(models.Model):
     archivo = models.FileField(upload_to='contratos/')
     tipo = models.CharField(max_length=20, choices=tipo_contrato)
     fecha_subida = models.DateTimeField(auto_now_add=True)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='contratos',
+        null=True,  # Lo dejamos null temporalmente para la migración
+        blank=True
+    )
 
     # Aquí guardaremos el JSON que nos devuelva FastAPI
     resultado_json = models.JSONField(null=True, blank=True)
