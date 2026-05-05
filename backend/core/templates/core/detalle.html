@@ -1,0 +1,24 @@
+<!-- Simplificado para brevedad -->
+<div class="container mt-5">
+    <h2>Informe de Auditoría: {{ contrato.cliente }}</h2>
+    <div class="badge {% if riesgo == 'Critico' %}bg-danger{% else %}bg-warning{% endif %}">
+        Riesgo: {{ riesgo }}
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3>Puntos Clave</h3>
+            <ul>
+                {% for punto in puntos_clave %}
+                <li>{{ punto }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3 class="text-danger">Banderas Rojas</h3>
+            {% for bandera in banderas_rojas %}
+            <div class="alert alert-danger">{{ bandera }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
