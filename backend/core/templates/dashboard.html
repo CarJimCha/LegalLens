@@ -30,7 +30,11 @@
                     </span>
                 </td>
                 <td>{{ c.resultado_json.datos_clave.dni|join:", " }}</td>
-                <td><a href="/admin/core/contratoauditado/{{c.id}}/change/" class="btn btn-sm btn-outline-primary">Ver Detalle</a></td>
+                <td>
+                    <a href="{% url 'detalle_auditoria' c.id %}" class="btn btn-sm btn-outline-primary">
+                        Ver Detalle
+                    </a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
