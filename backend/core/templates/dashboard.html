@@ -1,14 +1,39 @@
 <!-- dashboard.html simplificado -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <div class="container mt-5">
-    <h2>LegalLens: Panel de Auditoría</h2>
     <nav class="navbar navbar-light bg-light px-4">
-        <span class="navbar-brand">Bienvenido, {{ user.username }}</span>
+        <span class="navbar-brand">Bienvenid@, {{ user.username }}</span>
         <form action="{% url 'logout' %}" method="post" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-secondary btn-sm">Cerrar Sesión</button>
         </form>
     </nav>
+</div>
+
+<div class="container mt-5">
+    <div class="card-body">
+        <h5 class="card-title">Auditar Nuevo Contrato</h5>
+        <form method="post" enctype="multipart/form-data" class="row g-3">
+            {% csrf_token %}
+            <div class="col-md-4">
+                {{ form.cliente }}
+            </div>
+            <div class="col-md-3">
+                {{ form.tipo }}
+            </div>
+            <div class="col-md-3">
+                {{ form.archivo }}
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Analizar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2>LegalLens: Panel de Auditoría</h2>
     <table class="table table-hover mt-4">
         <thead class="table-dark">
             <tr>

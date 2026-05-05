@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import ContratoAuditado
+from .forms import ContratoForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 
@@ -16,8 +17,21 @@ def register(request):
 
 @login_required
 def dashboard(request):
+    if request.method == 'POST':
+        form = ContratoForm(request.POST, request.FILES)
+        if form.is_valid():
+            nuevo_contrato = form.save()
+            nuevo_contrato.auditar_contrato()
+            return redirect('dashboard')
+
+    # Obtenemos los contratos para listarlos
     contratos = ContratoAuditado.objects.all().order_by('-fecha_subida')
-    return render(request, 'dashboard.html', {'contratos': contratos})
+    form = ContratoForm()
+
+    return render(request, 'dashboard.html', {
+        'contratos': contratos,
+        'form': form
+    })
 
 @login_required
 def detalle_auditoria(request, pk):
