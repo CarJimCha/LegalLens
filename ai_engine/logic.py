@@ -39,32 +39,42 @@ class ContratoBase:
             if isinstance(self, ContratoAlquiler):
                 contexto_legal = """Eres experto en la Ley de Arrendamientos Urbanos (LAU) de España. 
                 Busca: fianzas que superen el mes legal, cláusulas que impidan la prórroga legal de 5 años, 
-                o intentos de cobrar honorarios de inmobiliaria al inquilino (siendo el casero empresa)."""
+                o intentos de cobrar honorarios de inmobiliaria al inquilino (siendo el casero empresa).
+                DATOS ESPECÍFICOS DE ALQUILER:
+                - Partes: Arrendador y Arrendatario.
+                - Fechas: Fecha de contrato, duración y prórrogas.
+                - Importes: Renta mensual, fianza (meses) y depósitos adicionales."""
             elif isinstance(self, ContratoNDA):
                 contexto_legal = """Eres experto en derecho mercantil y acuerdos de confidencialidad (NDA). 
                 Busca: duraciones de confidencialidad perpetuas e injustificadas, definiciones de 'Información Confidencial' 
-                demasiado vagas, o penalizaciones económicas desproporcionadas."""
+                demasiado vagas, o penalizaciones económicas desproporcionadas.
+                DATOS ESPECÍFICOS DE NDA:
+                - Partes: Parte Reveladora y Parte Receptora.
+                - Fechas: Fecha de efectividad y periodo de vigencia de la confidencialidad.
+                - Importes: Penalizaciones por incumplimiento (cláusula penal)."""
             else:
                 contexto_legal = "Eres un auditor legal experto en contratos españoles."
 
             prompt = f"""
-            {contexto_legal}
-            Analiza el texto y extrae la información requerida en este formato JSON exacto:
-            {{
-                "datos_clave": {{
-                    "nombres_partes": ["Nombre completo o empresa de cada firmante"],
-                    "dni": ["DNI o CIF de cada parte"],
-                    "fechas": ["Fecha de firma, inicio y fin si existen"],
-                    "importes": ["Renta, fianza, penalizaciones o cuantías mencionadas"]
-                }},
-                "puntos_clave": ["Lista de 3 puntos fundamentales del acuerdo"],
-                "banderas_rojas": ["Lista de cláusulas ilegales, abusivas o de alto riesgo"],
-                "riesgo_total": "Bajo, Medio o Critico"
-            }}
+                    Actúa como un experto legal en España. Analiza el texto y devuelve un JSON con esta estructura exacta:
+                    {{
+                        "datos_clave": {{
+                            "nombres_partes": ["Nombres completos"],
+                            "dni": ["DNI/NIF/CIF"],
+                            "fechas": ["Fecha firma", "Fecha inicio", "Fecha fin"],
+                            "importes": ["Cifras económicas detalladas (ej: Renta 800€, Fianza 1600€)"]
+                        }},
+                        "puntos_clave": ["Lista de 3 cláusulas principales"],
+                        "banderas_rojas": ["Lista de riesgos o ilegalidades detectadas"],
+                        "riesgo_total": "Bajo, Medio o Critico"
+                    }}
 
-            Texto del contrato:
-            {self.texto[:8000]}
-            """
+                    CONTEXTO ADICIONAL:
+                    {contexto_legal}
+
+                    TEXTO:
+                    {self.texto[:8000]}
+                    """
 
             response = model.generate_content(prompt)
             return json.loads(response.text)
