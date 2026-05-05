@@ -41,7 +41,6 @@
                 <th>Cliente</th>
                 <th>Tipo</th>
                 <th>Riesgo</th>
-                <th>Importes / Fechas</th> <!-- Agrupamos datos extraídos -->
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -55,12 +54,6 @@
                     <span class="badge {% if c.riesgo == 'Critico' %}bg-danger{% elif c.riesgo == 'Medio' %}bg-warning{% elif c.riesgo == 'Bajo' %}bg-success{% else %}.bg-info{% endif %}">
                         {{ c.riesgo }}
                     </span>
-                </td>
-                <td>
-                    <small>
-                        {{ c.resultado_json.datos_clave.fechas|join:", " }}<br>
-                        <strong>{{ c.resultado_json.datos_clave.importes|join:", " }}</strong>
-                    </small>
                 </td>
                 <td><a href="{% url 'detalle_auditoria' c.id %}" class="btn btn-sm btn-outline-primary">Ver</a></td>
             </tr>
