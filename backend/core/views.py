@@ -51,3 +51,13 @@ def detalle_auditoria(request, pk):
         'banderas_rojas': datos.get('banderas_rojas', []),
         'riesgo': contrato.riesgo
     })
+
+
+@login_required
+def reauditar_contrato(request, pk):
+    if request.user.is_staff:
+        contrato = get_object_or_404(ContratoAuditado, pk=pk)
+    else:
+        contrato = get_object_or_404(ContratoAuditado, pk=pk, usuario=request.user)
+    contrato.auditar_contrato()
+    return redirect('detalle_auditoria', pk=pk)

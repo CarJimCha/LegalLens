@@ -72,11 +72,14 @@
                 <td>{{ c.cliente }}</td>
                 <td>{{ c.get_tipo_display }}</td>
                 <td>
-                    <span class="badge {% if c.riesgo == 'Critico' %}bg-danger{% elif c.riesgo == 'Medio' %}bg-warning text-dark{% elif c.riesgo == 'Bajo' %}bg-success{% else %}bg-info{% endif %}">
+                    <span class="badge {% if c.riesgo == 'Alto' %}bg-danger{% elif c.riesgo == 'Medio' %}bg-warning text-dark{% else %}bg-success{% endif %}">
                         {{ c.riesgo }}
                     </span>
                 </td>
-                <td><a href="{% url 'detalle_auditoria' c.id %}" class="btn btn-sm btn-outline-primary">Ver</a></td>
+                <td style="white-space: nowrap;">
+                    <a href="{% url 'detalle_auditoria' c.id %}" class="btn btn-sm btn-primary me-1">Ver Informe</a>
+                    <a href="{% url 'reauditar_contrato' c.id %}" class="btn btn-sm btn-outline-warning">Volver a Analizar</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
