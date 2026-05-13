@@ -8,6 +8,37 @@
     .data-value { font-size: 1.05rem; color: #212529; }
 </style>
 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">⚖️ LegalLens</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">Panel Principal</a>
+                </li>
+                {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link text-warning" href="/admin/">Administración</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <div class="d-flex align-items-center text-white">
+                <span class="me-3">Hola, <strong>{{ user.username }}</strong></span>
+                <form action="{% url 'logout' %}" method="post" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
 <div class="container mt-5 mb-5">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
